@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
 import ItemInfo from "./ItemInfo";
-import ItemRatings from "./ItemRatings";
 import ItemStats from "./ItemRatings";
 
 const styles = StyleSheet.create({
