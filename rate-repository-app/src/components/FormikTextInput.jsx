@@ -8,25 +8,37 @@ import theme from "../theme";
 const styles = StyleSheet.create({
   errorText: {
     marginTop: 5,
+    color: "#d73a4a",
   },
   textInputContainer: {
-    border: theme.colors.textPrimary,
+    borderColor: theme.colors.textPrimary,
     borderWidth: 1,
     borderRadius: 4,
-    marginBottom: 10,
+    marginTop: 10,
+    height: 50,
+    justifyContent: "center",
+  },
+  textInputContainerError: {
+    borderColor: "#d73a4a",
+    borderWidth: 1,
+    borderRadius: 4,
+    marginTop: 10,
     height: 50,
     justifyContent: "center",
   },
 });
 
 const FormikTextInput = ({ name, ...props }) => {
-  console.log(name);
   const [field, meta, helpers] = useField(name);
   const showError = meta.touched && meta.error;
+  const containerStyle = showError
+    ? styles.textInputContainerError
+    : styles.textInputContainer;
+  console.log(name, containerStyle.border);
 
   return (
     <>
-      <View style={styles.textInputContainer}>
+      <View style={containerStyle}>
         <TextInput
           onChangeText={(value) => helpers.setValue(value)}
           onBlur={() => helpers.setTouched(true)}

@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const TextInput = ({ style, error, ...props }) => {
+const TextInput = ({ style, ...props }) => {
   // const textInputStyle = [style];
   const textInputStyle = styles.textInput;
 
