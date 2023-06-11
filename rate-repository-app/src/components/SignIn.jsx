@@ -50,8 +50,6 @@ const validationSchema = yup.object().shape({
 const SignIn = () => {
   const [signIn] = useSignIn();
 
-  const auth = new AuthStorage();
-
   const initialValues = {
     username: "",
     password: "",
@@ -61,9 +59,7 @@ const SignIn = () => {
     const { username, password } = values;
 
     try {
-      const { data } = await signIn({ username, password });
-
-      await auth.setAccessToken(data.authenticate.accessToken);
+      await signIn({ username, password });
     } catch (e) {
       console.log(e);
     }

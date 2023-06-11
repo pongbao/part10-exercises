@@ -5,6 +5,9 @@ import RepositoryList from "./RepositoryList";
 import AppBar from "./AppBar";
 import SignIn from "./SignIn";
 import AuthStorage from "../utils/authStorage";
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "../graphql/queries";
+import Text from "./Text";
 
 const styles = StyleSheet.create({
   container: {
@@ -14,27 +17,22 @@ const styles = StyleSheet.create({
   },
 });
 
-const links = [
-  { text: "Repositories", url: "/" },
-  {
-    text: "Sign in",
-    url: "/sign-in",
-  },
-];
-
 const Main = () => {
-  const auth = new AuthStorage();
+  const { data, error, loading } = useQuery(GET_USER, {
+    fetchPolicy: "cache-and-network",
+  });
 
-  const getToken = async () => {
-    const token = await auth.getAccessToken();
-    console.log(token);
-  };
-
-  getToken();
+  if (loading) {
+    return (
+      <View>
+        <Text style={styles.container}>Opening app...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <AppBar links={links} />
+      <AppBar user={data.me} />
       <Routes>
         <Route path="/" element={<RepositoryList />} exact />
         <Route path="/sign-in" element={<SignIn />} exact />
