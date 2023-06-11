@@ -34,7 +34,6 @@ const FormikTextInput = ({ name, ...props }) => {
   const containerStyle = showError
     ? styles.textInputContainerError
     : styles.textInputContainer;
-  console.log(name, containerStyle.border);
 
   return (
     <>

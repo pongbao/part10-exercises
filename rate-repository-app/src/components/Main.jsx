@@ -4,6 +4,7 @@ import { Route, Routes, Navigate } from "react-router-native";
 import RepositoryList from "./RepositoryList";
 import AppBar from "./AppBar";
 import SignIn from "./SignIn";
+import AuthStorage from "../utils/authStorage";
 
 const styles = StyleSheet.create({
   container: {
@@ -22,6 +23,15 @@ const links = [
 ];
 
 const Main = () => {
+  const auth = new AuthStorage();
+
+  const getToken = async () => {
+    const token = await auth.getAccessToken();
+    console.log(token);
+  };
+
+  getToken();
+
   return (
     <View style={styles.container}>
       <AppBar links={links} />
