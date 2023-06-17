@@ -6,7 +6,6 @@ import Text from "./Text";
 import FormikTextInput from "./FormikTextInput";
 import theme from "../theme";
 import useSignIn from "../hooks/useSignIn";
-import AuthStorage from "../utils/authStorage";
 
 const styles = StyleSheet.create({
   formButton: {

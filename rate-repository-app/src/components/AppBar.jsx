@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
 
 const AppBarTab = ({ text, url, userDependent, user, onClick }) => {
   const navigate = useNavigate();
-  console.log(text, user);
 
   return userDependent ? (
     user && (

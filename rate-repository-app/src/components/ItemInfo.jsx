@@ -18,9 +18,11 @@ const styles = StyleSheet.create({
 
 const ItemImage = ({ item }) => {
   return (
-    <View>
-      <Image source={{ uri: item.ownerAvatarUrl }} style={styles.logo} />
-    </View>
+    <Image
+      testID="repositoryImage"
+      source={{ uri: item.ownerAvatarUrl }}
+      style={styles.logo}
+    />
   );
 };
 

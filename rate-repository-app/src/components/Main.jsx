@@ -4,10 +4,10 @@ import { Route, Routes, Navigate } from "react-router-native";
 import RepositoryList from "./RepositoryList";
 import AppBar from "./AppBar";
 import SignIn from "./SignIn";
-import AuthStorage from "../utils/authStorage";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../graphql/queries";
 import Text from "./Text";
+import { useEffect } from "react";
 
 const styles = StyleSheet.create({
   container: {
@@ -32,7 +32,7 @@ const Main = () => {
 
   return (
     <View style={styles.container}>
-      <AppBar user={data.me} />
+      <AppBar user={error ? null : data.me} />
       <Routes>
         <Route path="/" element={<RepositoryList />} exact />
         <Route path="/sign-in" element={<SignIn />} exact />

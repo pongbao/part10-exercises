@@ -8,6 +8,7 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
+    "plugin:jest/recommended",
     "@babel/preset-env",
     "@babel/preset-react"
   ],
