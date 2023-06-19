@@ -7,6 +7,7 @@ import Main from "./src/components/Main";
 import createApolloClient from "./src/utils/apolloClient";
 import AuthStorage from "./src/utils/authStorage";
 import AuthStorageContext from "./src/contexts/AuthStorageContext";
+import SingleViewContextProvider from "./src/contexts/SingleViewContext";
 
 const authStorage = new AuthStorage();
 const apolloClient = createApolloClient(authStorage);
@@ -19,7 +20,9 @@ const App = () => {
       <NativeRouter>
         <ApolloProvider client={apolloClient}>
           <AuthStorageContext.Provider value={authStorage}>
-            <Main />
+            <SingleViewContextProvider>
+              <Main />
+            </SingleViewContextProvider>
           </AuthStorageContext.Provider>
         </ApolloProvider>
       </NativeRouter>

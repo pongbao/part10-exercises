@@ -5,7 +5,8 @@ import theme from "../theme";
 import { useNavigate } from "react-router-native";
 import { useContext } from "react";
 import { useApolloClient } from "@apollo/client";
-import AuthStorageContext from "../contexts/AuthStorageContext";
+import { useAuthStorage } from "../contexts/AuthStorageContext";
+import { useSingleView } from "../contexts/SingleViewContext";
 
 // import { useState } from "react";
 
@@ -58,7 +59,8 @@ const AppBarTab = ({ text, url, userDependent, user, onClick }) => {
 
 const AppBar = ({ user }) => {
   const apolloClient = useApolloClient();
-  const authStorage = useContext(AuthStorageContext);
+  const authStorage = useAuthStorage();
+  const [singleView, setSingleView] = useSingleView();
 
   // const [parentHeight, setParentHeight] = useState(undefined);
 
@@ -71,6 +73,11 @@ const AppBar = ({ user }) => {
   const logout = async () => {
     await authStorage.removeAccessToken();
     apolloClient.resetStore();
+    setSingleView(false);
+  };
+
+  const changeView = () => {
+    setSingleView(false);
   };
 
   const links = [
@@ -79,18 +86,14 @@ const AppBar = ({ user }) => {
       url: "/",
       userDependent: false,
       user: true,
-      onClick: () => {
-        return;
-      },
+      onClick: changeView,
     },
     {
       text: "Sign in",
       url: "/sign-in",
       userDependent: true,
       user: !user,
-      onClick: () => {
-        return;
-      },
+      onClick: changeView,
     },
     {
       text: "Sign Out",

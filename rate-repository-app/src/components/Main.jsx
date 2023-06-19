@@ -1,13 +1,13 @@
 import { StyleSheet, View } from "react-native";
-import { Route, Routes, Navigate } from "react-router-native";
-
-import RepositoryList from "./RepositoryList";
-import AppBar from "./AppBar";
-import SignIn from "./SignIn";
+import { Route, Routes, Navigate, useMatch } from "react-router-native";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../graphql/queries";
+
+import RepositoryList from "./RepositoryList";
+import RepositoryItem from "./RepositoryItem";
+import AppBar from "./AppBar";
+import SignIn from "./SignIn";
 import Text from "./Text";
-import { useEffect } from "react";
 
 const styles = StyleSheet.create({
   container: {
@@ -22,6 +22,9 @@ const Main = () => {
     fetchPolicy: "cache-and-network",
   });
 
+  const match = useMatch("/:id");
+  const id = match ? match.params.id : null;
+
   if (loading) {
     return (
       <View>
@@ -35,6 +38,7 @@ const Main = () => {
       <AppBar user={error ? null : data.me} />
       <Routes>
         <Route path="/" element={<RepositoryList />} exact />
+        <Route path="/:id" element={<RepositoryItem id={id} />} exact />
         <Route path="/sign-in" element={<SignIn />} exact />
         <Route path="*" element={<Navigate to="/" />} replace />
       </Routes>
