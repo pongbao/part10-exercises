@@ -13,6 +13,8 @@ const styles = StyleSheet.create({
   },
   details: {
     paddingLeft: 14,
+    display: "flex",
+    flex: 1,
   },
 });
 
