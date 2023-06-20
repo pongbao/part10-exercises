@@ -67,3 +67,35 @@ export const SIGN_IN = gql`
     }
   }
 `;
+
+export const CREATE_REVIEW = gql`
+  mutation createReview(
+    $ownerName: String!
+    $rating: Int!
+    $repositoryName: String!
+    $text: String
+  ) {
+    createReview(
+      review: {
+        ownerName: $ownerName
+        rating: $rating
+        repositoryName: $repositoryName
+        text: $text
+      }
+    ) {
+      id
+      repositoryId
+      repository {
+        id
+        ownerName
+        fullName
+        url
+      }
+      createdAt
+      rating
+      user {
+        username
+      }
+    }
+  }
+`;

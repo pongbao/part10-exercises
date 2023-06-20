@@ -89,6 +89,13 @@ const AppBar = ({ user }) => {
       onClick: changeView,
     },
     {
+      text: "Create a Review",
+      url: "/create-review",
+      userDependent: true,
+      user: user,
+      onClick: changeView,
+    },
+    {
       text: "Sign in",
       url: "/sign-in",
       userDependent: true,

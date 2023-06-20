@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     marginTop: 10,
-    height: 50,
+    paddingVertical: 10,
     justifyContent: "center",
   },
   textInputContainerError: {
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     marginTop: 10,
-    height: 50,
+    paddingVertical: 10,
     justifyContent: "center",
   },
 });

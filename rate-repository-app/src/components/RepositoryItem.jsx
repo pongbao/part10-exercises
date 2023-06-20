@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import { StyleSheet, Pressable, View, FlatList } from "react-native";
 import { useNavigate } from "react-router-native";
 import * as Linking from "expo-linking";
@@ -9,7 +10,6 @@ import Text from "./Text";
 import theme from "../theme";
 
 import { useSingleView } from "../contexts/SingleViewContext";
-import { useQuery } from "@apollo/client";
 import { GET_REPOSITORY } from "../graphql/queries";
 
 const styles = StyleSheet.create({
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: theme.colors.primary,
     borderRadius: 4,
-    marginTop: 10,
+    marginVertical: 10,
     marginHorizontal: 14,
   },
   text: {
@@ -56,6 +56,11 @@ const styles = StyleSheet.create({
   },
 });
 
+const ItemSeparator = () => {
+  const [singleView, setSingleView] = useSingleView();
+  return singleView && <View style={styles.separator} />;
+};
+
 const RepositoryInfo = ({ item }) => {
   const [singleView, setSingleView] = useSingleView();
   const navigate = useNavigate();
@@ -84,6 +89,7 @@ const RepositoryInfo = ({ item }) => {
           </Text>
         </Pressable>
       )}
+      <ItemSeparator />
     </View>
   );
 };
@@ -106,11 +112,6 @@ const ReviewItem = ({ review }) => {
       </View>
     )
   );
-};
-
-const ItemSeparator = () => {
-  const [singleView, setSingleView] = useSingleView();
-  return singleView && <View style={styles.separator} />;
 };
 
 const RepositoryItem = ({ id }) => {
