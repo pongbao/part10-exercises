@@ -23,7 +23,7 @@ const useRepositories = () => {
   //   fetchRepositories();
   // }, []);
 
-  const { data, error, loading } = useQuery(GET_REPOSITORIES, {
+  const { data, error, loading, refetch } = useQuery(GET_REPOSITORIES, {
     fetchPolicy: "cache-and-network",
   });
 
@@ -31,7 +31,8 @@ const useRepositories = () => {
     data,
     error,
     loading,
-    // refetch: fetchRepositories
+    refetch,
+    // : fetchRepositories
   };
 };
 

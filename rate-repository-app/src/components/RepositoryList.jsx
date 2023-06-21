@@ -1,7 +1,10 @@
 import { FlatList, View, StyleSheet } from "react-native";
+import { Button, Menu, PaperProvider, TextInput } from "react-native-paper";
+import { useDebounce } from "use-debounce";
 import RepositoryItem from "./RepositoryItem";
 import useRepositories from "../hooks/useRepositories";
 import Text from "./Text";
+import React, { useEffect, useState } from "react";
 
 const styles = StyleSheet.create({
   separator: {
@@ -59,23 +62,137 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-export const RepositoryListContainer = ({ repositories }) => {
-  const repositoryNodes = repositories
-    ? repositories.edges.map((edge) => edge.node)
-    : [];
+const SearchContainer = ({ filter, setFilter }) => {
+  const [text, setText] = useState("");
+  const [value] = useDebounce(text, 500);
+
+  useEffect(() => {
+    setFilter(value);
+    console.log(value);
+  }, [value]);
 
   return (
-    <FlatList
-      data={repositoryNodes}
-      ItemSeparatorComponent={ItemSeparator}
-      renderItem={({ item }) => <RepositoryItem id={item.id} />}
-      keyExtractor={(item) => item.id}
+    <TextInput
+      label="Filter repositories..."
+      value={text}
+      onChangeText={(input) => {
+        setText(input);
+      }}
+      style={{ marginHorizontal: 14, marginTop: 14 }}
+      right={<TextInput.Icon icon="magnify" />}
     />
   );
 };
 
+const SortContainer = ({ setOrder, setDirection }) => {
+  const [visible, setVisible] = useState(false);
+
+  const handleSortSelection = (order, direction) => {
+    setOrder(order);
+    setDirection(direction);
+    setVisible(false);
+  };
+
+  return (
+    <Menu
+      visible={visible}
+      onDismiss={() => {
+        setVisible(!visible);
+      }}
+      anchor={
+        <Button
+          onPress={() => {
+            setVisible(!visible);
+          }}
+          mode="contained"
+          style={{
+            margin: 15,
+            width: 100,
+          }}
+        >
+          Sort by
+        </Button>
+      }
+    >
+      <Menu.Item
+        title="Oldest respositories"
+        onPress={() => {
+          handleSortSelection("CREATED_AT", "ASC");
+        }}
+      />
+      <Menu.Item
+        title="Latest respositories"
+        onPress={() => {
+          handleSortSelection("CREATED_AT", "DESC");
+        }}
+      />
+      <Menu.Item
+        title="Highest rated repositories"
+        onPress={() => {
+          handleSortSelection("RATING_AVERAGE", "DESC");
+        }}
+      />
+      <Menu.Item
+        title="Lowest rated repositories"
+        onPress={() => {
+          handleSortSelection("RATING_AVERAGE", "ASC");
+        }}
+      />
+    </Menu>
+  );
+};
+
+export class RepositoryListContainer extends React.Component {
+  renderHeader = () => {
+    const { visible, setVisible, setDirection, setOrder, filter, setFilter } =
+      this.props;
+
+    return (
+      <View>
+        <SearchContainer filter={filter} setFilter={setFilter} />
+        <SortContainer
+          visible={visible}
+          setVisible={setVisible}
+          setDirection={setDirection}
+          setOrder={setOrder}
+        />
+      </View>
+    );
+  };
+
+  render() {
+    const { repositories } = this.props;
+
+    const repositoryNodes = repositories
+      ? repositories.edges.map((edge) => edge.node)
+      : [];
+
+    return (
+      <FlatList
+        data={repositoryNodes}
+        ItemSeparatorComponent={ItemSeparator}
+        renderItem={({ item }) => <RepositoryItem id={item.id} />}
+        ListHeaderComponent={this.renderHeader}
+        keyExtractor={(item) => item.id}
+      />
+    );
+  }
+}
+
 const RepositoryList = () => {
-  const { data, error, loading } = useRepositories();
+  const [order, setOrder] = useState("CREATED_AT");
+  const [direction, setDirection] = useState("ASC");
+  const [filter, setFilter] = useState("");
+
+  const { data, error, loading, refetch } = useRepositories();
+
+  useEffect(() => {
+    refetch({
+      orderBy: order,
+      orderDirection: direction,
+      searchKeyword: filter,
+    });
+  }, [order, direction, filter]);
 
   if (loading) {
     return (
@@ -87,7 +204,17 @@ const RepositoryList = () => {
 
   const repositories = data.repositories;
 
-  return <RepositoryListContainer repositories={repositories} />;
+  return (
+    <PaperProvider>
+      <RepositoryListContainer
+        repositories={repositories}
+        setDirection={setDirection}
+        setOrder={setOrder}
+        filter={filter}
+        setFilter={setFilter}
+      />
+    </PaperProvider>
+  );
 };
 
 export default RepositoryList;

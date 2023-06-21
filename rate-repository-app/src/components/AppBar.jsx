@@ -45,7 +45,6 @@ const AppBarTab = ({ text, url, userDependent, user, onClick }) => {
     <Pressable
       style={styles.child}
       onPress={() => {
-        console.log(text, onClick);
         onClick();
         navigate(url);
       }}
