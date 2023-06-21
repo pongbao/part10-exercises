@@ -34,7 +34,7 @@ const SignInForm = ({ onSubmit }) => {
       />
       <Pressable style={styles.formButton} onPress={onSubmit}>
         <Text color={"textWhite"} fontSize={"subheading"} style={styles.text}>
-          Sign In
+          Sign in
         </Text>
       </Pressable>
     </View>

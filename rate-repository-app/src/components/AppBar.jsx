@@ -109,6 +109,13 @@ const AppBar = ({ user }) => {
       user: user,
       onClick: logout,
     },
+    {
+      text: "Sign Up",
+      url: "/sign-up",
+      userDependent: true,
+      user: !user,
+      onClick: changeView,
+    },
   ];
 
   return (
