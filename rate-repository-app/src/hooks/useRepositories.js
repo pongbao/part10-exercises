@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { GET_REPOSITORIES } from "../graphql/queries";
 
-const useRepositories = () => {
+const useRepositories = (variables) => {
   // const [repositories, setRepositories] = useState(null);
   // const [loading, setLoading] = useState(false);
 
@@ -23,16 +23,37 @@ const useRepositories = () => {
   //   fetchRepositories();
   // }, []);
 
-  const { data, error, loading, refetch } = useQuery(GET_REPOSITORIES, {
-    fetchPolicy: "cache-and-network",
-  });
+  const { data, error, loading, refetch, fetchMore, ...result } = useQuery(
+    GET_REPOSITORIES,
+    {
+      variables,
+      fetchPolicy: "cache-and-network",
+    }
+  );
+
+  const handleFetchMore = () => {
+    const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage;
+
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        after: data.repositories.pageInfo.endCursor,
+        ...variables,
+      },
+    });
+  };
 
   return {
-    data,
+    repositories: data?.repositories,
     error,
     loading,
     refetch,
     // : fetchRepositories
+    fetchMore: handleFetchMore,
+    ...result,
   };
 };
 

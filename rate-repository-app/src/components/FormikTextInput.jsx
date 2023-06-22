@@ -8,7 +8,7 @@ import theme from "../theme";
 const styles = StyleSheet.create({
   errorText: {
     marginTop: 5,
-    color: "#d73a4a",
+    color: "#D73A4A",
   },
   textInputContainer: {
     borderColor: theme.colors.textPrimary,
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   textInputContainerError: {
-    borderColor: "#d73a4a",
+    borderColor: "#D73A4A",
     borderWidth: 1,
     borderRadius: 4,
     marginTop: 10,

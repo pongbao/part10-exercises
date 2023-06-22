@@ -68,7 +68,6 @@ const SearchContainer = ({ filter, setFilter }) => {
 
   useEffect(() => {
     setFilter(value);
-    console.log(value);
   }, [value]);
 
   return (
@@ -161,7 +160,7 @@ export class RepositoryListContainer extends React.Component {
   };
 
   render() {
-    const { repositories } = this.props;
+    const { repositories, onEndReached } = this.props;
 
     const repositoryNodes = repositories
       ? repositories.edges.map((edge) => edge.node)
@@ -174,17 +173,21 @@ export class RepositoryListContainer extends React.Component {
         renderItem={({ item }) => <RepositoryItem id={item.id} />}
         ListHeaderComponent={this.renderHeader}
         keyExtractor={(item) => item.id}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.5}
       />
     );
   }
 }
 
 const RepositoryList = () => {
-  const [order, setOrder] = useState("CREATED_AT");
-  const [direction, setDirection] = useState("ASC");
+  const [order, setOrder] = useState();
+  const [direction, setDirection] = useState();
   const [filter, setFilter] = useState("");
 
-  const { data, error, loading, refetch } = useRepositories();
+  const { repositories, error, loading, refetch, fetchMore } = useRepositories({
+    first: 5,
+  });
 
   useEffect(() => {
     refetch({
@@ -202,7 +205,9 @@ const RepositoryList = () => {
     );
   }
 
-  const repositories = data.repositories;
+  const onEndReached = () => {
+    fetchMore();
+  };
 
   return (
     <PaperProvider>
@@ -212,6 +217,7 @@ const RepositoryList = () => {
         setOrder={setOrder}
         filter={filter}
         setFilter={setFilter}
+        onEndReached={onEndReached}
       />
     </PaperProvider>
   );

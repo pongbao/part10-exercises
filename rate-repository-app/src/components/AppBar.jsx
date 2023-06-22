@@ -3,7 +3,6 @@ import Constants from "expo-constants";
 import Text from "./Text";
 import theme from "../theme";
 import { useNavigate } from "react-router-native";
-import { useContext } from "react";
 import { useApolloClient } from "@apollo/client";
 import { useAuthStorage } from "../contexts/AuthStorageContext";
 import { useSingleView } from "../contexts/SingleViewContext";
@@ -36,7 +35,7 @@ const AppBarTab = ({ text, url, userDependent, user, onClick }) => {
           navigate(url);
         }}
       >
-        <Text color={"textWhite"} fontSize={"subheading"}>
+        <Text color={"textWhite"} fontSize={"subheading"} fontWeight={"bold"}>
           {text}
         </Text>
       </Pressable>
@@ -49,7 +48,7 @@ const AppBarTab = ({ text, url, userDependent, user, onClick }) => {
         navigate(url);
       }}
     >
-      <Text color={"textWhite"} fontSize={"subheading"}>
+      <Text color={"textWhite"} fontSize={"subheading"} fontWeight={"bold"}>
         {text}
       </Text>
     </Pressable>
@@ -90,6 +89,13 @@ const AppBar = ({ user }) => {
     {
       text: "Create a Review",
       url: "/create-review",
+      userDependent: true,
+      user: user,
+      onClick: changeView,
+    },
+    {
+      text: "My Reviews",
+      url: "/reviews",
       userDependent: true,
       user: user,
       onClick: changeView,

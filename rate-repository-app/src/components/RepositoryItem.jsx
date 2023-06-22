@@ -44,9 +44,9 @@ const styles = StyleSheet.create({
     paddingTop: 7,
   },
   reviewRating: {
-    height: 34,
-    width: 34,
-    borderRadius: 17,
+    height: 38,
+    width: 38,
+    borderRadius: 19,
     borderColor: theme.colors.primary,
     borderWidth: 2,
     display: "flex",
@@ -106,7 +106,9 @@ const ReviewItem = ({ review }) => {
         </View>
         <View style={styles.reviewInfo}>
           <Text fontWeight={"bold"}>{review.user.username}</Text>
-          <Text>{format(new Date(review.createdAt), "dd.MM.yyyy")}</Text>
+          <Text color={"textSecondary"}>
+            {format(new Date(review.createdAt), "dd.MM.yyyy")}
+          </Text>
           <Text style={styles.reviewText}>{review.text}</Text>
         </View>
       </View>
@@ -115,8 +117,10 @@ const ReviewItem = ({ review }) => {
 };
 
 const RepositoryItem = ({ id }) => {
-  const { data, error, loading } = useQuery(GET_REPOSITORY, {
-    variables: { id },
+  const variables = { id, first: 3 };
+
+  const { data, error, loading, fetchMore } = useQuery(GET_REPOSITORY, {
+    variables,
     fetchPolicy: "cache-and-network",
   });
 
@@ -125,9 +129,30 @@ const RepositoryItem = ({ id }) => {
   }
 
   const repositoryItem = data.repository;
+
   const reviews = repositoryItem
     ? repositoryItem.reviews.edges.map((edge) => edge.node)
     : [];
+
+  const handleFetchMore = () => {
+    const canFetchMore =
+      !loading && data?.repository.reviews.pageInfo.hasNextPage;
+
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        after: data.repository.reviews.pageInfo.endCursor,
+        ...variables,
+      },
+    });
+  };
+
+  const onEndReached = () => {
+    handleFetchMore();
+  };
 
   return (
     <FlatList
@@ -136,6 +161,8 @@ const RepositoryItem = ({ id }) => {
       renderItem={({ item }) => <ReviewItem review={item} />}
       keyExtractor={({ id }) => id}
       ListHeaderComponent={() => <RepositoryInfo item={repositoryItem} />}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={0.5}
     />
   );
 };

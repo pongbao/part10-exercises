@@ -2,19 +2,25 @@ import { gql } from "@apollo/client";
 
 export const GET_REPOSITORIES = gql`
   query repositories(
+    $first: Int
+    $after: String
     $orderBy: AllRepositoriesOrderBy
     $orderDirection: OrderDirection
     $searchKeyword: String
   ) {
     repositories(
+      first: $first
+      after: $after
       orderBy: $orderBy
       orderDirection: $orderDirection
       searchKeyword: $searchKeyword
     ) {
+      totalCount
       edges {
         node {
           id
           fullName
+          createdAt
           reviewCount
           ratingAverage
           forksCount
@@ -23,13 +29,19 @@ export const GET_REPOSITORIES = gql`
           language
           ownerAvatarUrl
         }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        startCursor
+        hasNextPage
       }
     }
   }
 `;
 
 export const GET_REPOSITORY = gql`
-  query getRepository($id: ID!) {
+  query getRepository($id: ID!, $first: Int, $after: String) {
     repository(id: $id) {
       id
       fullName
@@ -41,7 +53,7 @@ export const GET_REPOSITORY = gql`
       language
       ownerAvatarUrl
       url
-      reviews {
+      reviews(first: $first, after: $after) {
         edges {
           node {
             id
@@ -53,6 +65,12 @@ export const GET_REPOSITORY = gql`
               username
             }
           }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          startCursor
+          hasNextPage
         }
       }
     }
@@ -60,10 +78,34 @@ export const GET_REPOSITORY = gql`
 `;
 
 export const GET_USER = gql`
-  query {
+  query getCurrentUser(
+    $includeReviews: Boolean = false
+    $first: Int
+    $after: String
+  ) {
     me {
       id
       username
+      reviews(first: $first, after: $after) @include(if: $includeReviews) {
+        edges {
+          node {
+            id
+            createdAt
+            text
+            repository {
+              id
+              fullName
+            }
+            rating
+          }
+          cursor
+        }
+        pageInfo {
+          startCursor
+          hasNextPage
+          endCursor
+        }
+      }
     }
   }
 `;
@@ -114,5 +156,11 @@ export const CREATE_REVIEW = gql`
         username
       }
     }
+  }
+`;
+
+export const DELETE_REVIEW = gql`
+  mutation deleteReview($deleteReviewId: ID!) {
+    deleteReview(id: $deleteReviewId)
   }
 `;
